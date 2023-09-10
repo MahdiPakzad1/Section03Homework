@@ -1,0 +1,54 @@
+﻿@page "/fetchdata"
+@using BlazorApp.Data
+@inject WeatherForecastService ForecastService
+
+<PageTitle>Weather forecast</PageTitle>
+
+<h1 class="text-center">Weather forecast</h1>
+
+
+@if (forecasts == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="row justify-content-center mt-3">
+        
+        <div class="col-lg-9">
+            <table class="table table-striped table-hover">
+                <thead class="table-primary">
+                    <tr class="table-active">
+                        <th>Date</th>
+                        <th>Temp. (C)</th>
+                        <th>Temp. (F)</th>
+                        <th>Summary</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var forecast in forecasts)
+                    {
+                        <tr class="table-dark">
+                            <td>@forecast.Date.ToShortDateString()</td>
+                            <td>@forecast.TemperatureC</td>
+                            <td>@forecast.TemperatureF</td>
+                            <td>@forecast.Summary</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="col-lg-3 ">
+            <img src="images/OIP.jfif" class="img-fluid img-thumbnail" />
+        </div>
+    </div>
+}
+
+@code {
+    private WeatherForecast[]? forecasts;
+
+    protected override async Task OnInitializedAsync()
+    {
+        forecasts = await ForecastService.GetForecastAsync(DateOnly.FromDateTime(DateTime.Now));
+    }
+}
